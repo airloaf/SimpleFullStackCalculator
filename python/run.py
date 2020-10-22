@@ -1,7 +1,16 @@
 from flask import Flask
+from flask_restplus import Api
 
-# Initialization of flask
+# Import our api
+from src.apis.calculator import api as calc_api
+
+# Initialize flask and flaskrestplus
+api = Api()
 app = Flask(__name__)
+api.init_app(app)
+    
+# add apis
+api.add_namespace(calc_api)
 
 @app.route('/')
 def hello():
