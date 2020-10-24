@@ -30,7 +30,7 @@ class Calculator(Resource):
             }, 400
 
 @api.route('/history/<int:numItems>', defaults={'offset': 0})
-@api.route('/history/<int:numItems><int:offset>')
+@api.route('/history/<int:numItems>/<int:offset>')
 class CalcHistory(Resource):
     def get(self, numItems, offset):
         result = (History.query.order_by(History.id.desc()).limit(numItems).offset(offset).all())
