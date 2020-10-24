@@ -6,7 +6,11 @@ import axios from "axios"
 export default class Calculator extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { expression: ' ' };
+        this.state = {
+            expression: null,
+            result: null,
+            error: null
+        };
         this.updateExpression = this.updateExpression.bind(this);
         this.evaulateExpression = this.evaulateExpression.bind(this);
     }
@@ -16,40 +20,52 @@ export default class Calculator extends React.Component {
             <React.Fragment>
                 <Form onSubmit={this.evaulateExpression}>
                     <Form.Group>
-                        <Form.Label>Expression</Form.Label>
-                        <Form.Control placeholder="Enter mathematical expression (e.g. 2+2)" onChange={this.updateExpression} />
+                        <Form.Label>Enter a mathematical expression</Form.Label>
+                        <Form.Control placeholder="2+2" onChange={this.updateExpression} />
                     </Form.Group>
-
-                    <Button variant="primary" onSubmit={this.evaulateExpression}>
+                    <Button variant="primary" type="submit">
                         Submit
                     </Button>
                 </Form>
+
+                {this.state.result?
+                    this.state.result
+                :
+                    null
+                }
+
+                {this.state.error?
+                    "Error computing result"
+                :
+                    null
+                }
+
             </React.Fragment>
         )
     }
 
     updateExpression(e) {
-        console.log(this.state.expression);
         this.setState({ expression: e.target.value });
     }
 
     evaulateExpression(e) {
         e.preventDefault()
-        console.log("Hello");
-        console.log(e);
-
         axios.post('/calculator/calc', {
-            expression: "2+2"
+            expression: this.state.expression
         })
         .then((res)=>{
             console.log(res);
-            console.log(res.data);
+            this.setState({
+                result: res.data.result,
+                error: false
+            });
         })
         .catch((err)=>{
-            console.log(err);
+            this.setState({
+                result: null,
+                error: true
+            });
         })
-
-        //this.setState({ login: e.target.value });
     }
 
 }
